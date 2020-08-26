@@ -6,7 +6,7 @@ html, body {
 
 #layout_container { 
     display: flex;
-    height: calc(100% - 60px);
+    height: 100%;
 }
 
 #selected_infoblock {
@@ -388,7 +388,7 @@ select.error, textarea.error, input.error {
     background: -moz-linear-gradient(#002F5D, #002F5D 60%, #021624);
     background: -ms-linear-gradient(#002F5D, #002F5D 60%, #021624);
     background: linear-gradient(#002F5D, #002F5D 60%, #021624);
-    display: flex;
+    display: none;
     box-shadow: -6px 0px 8px #999999;
     z-index: 99999;
 }
@@ -424,6 +424,7 @@ select.error, textarea.error, input.error {
 }
 
 .buttonContainer {
+    float: left;
     margin-left: auto;
 }
 
@@ -466,9 +467,8 @@ select.error, textarea.error, input.error {
 }
 
 .settingsContainer {
-    padding-right: 60px;
+    float: right;
     padding-left: 2px;
-    margin-top: 18px;
     margin-left: auto;
     cursor: pointer;
 }
