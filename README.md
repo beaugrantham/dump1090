@@ -1,60 +1,27 @@
-# dump1090-fa Debian/Raspbian packages
+# dump1090
 
-This is a fork of [dump1090-mutability](https://github.com/mutability/dump1090)
-customized for use within [FlightAware](http://flightaware.com)'s
-[PiAware](http://flightaware.com/adsb/piaware) software.
+This is a fork of [flightaware/dump1090](https://github.com/flightaware/dump1090) with UI tweaks and Docker support. The Docker image includes NGINX for the UI.
 
-It is designed to build as a Debian package.
+## Building
 
-## Building under stretch
-
-```bash
-$ sudo apt-get install build-essential debhelper librtlsdr-dev pkg-config dh-systemd libncurses5-dev libbladerf-dev
-$ dpkg-buildpackage -b
+```
+docker build -t dump1090:1.0.0 .
 ```
 
-## Building under jessie
+## Running
 
-### Dependencies - bladeRF
-
-You will need a build of libbladeRF. You can build packages from source:
-
-```bash
-$ git clone https://github.com/Nuand/bladeRF.git  
-$ cd bladeRF  
-$ git checkout 2017.12-rc1  
-$ dpkg-buildpackage -b
+```
+docker run \
+  -dit \
+  -Pp 8080:8080 \
+  --name dump1090 \
+  --device /dev/bus/usb \
+  dump1090:1.0.0 \
+  --lat 0.0 \
+  --lon 0.0 \
+  --quiet
 ```
 
-Or Nuand has some build/install instructions including an Ubuntu PPA
-at https://github.com/Nuand/bladeRF/wiki/Getting-Started:-Linux
+## UI
 
-Or FlightAware provides armhf packages as part of the piaware repository;
-see https://flightaware.com/adsb/piaware/install
-
-### Dependencies - rtlsdr
-
-This is packaged with jessie. `sudo apt-get install librtlsdr-dev`
-
-### Actually building it
-
-Nothing special, just build it (`dpkg-buildpackage -b`)
-
-## Building under wheezy
-
-First run `prepare-wheezy-tree.sh`. This will create a package tree in
-package-wheezy/. Build in there (`dpkg-buildpackage -b`)
-
-The wheezy build does not include bladeRF support.
-
-## Building manually
-
-You can probably just run "make" after installing the required dependencies.
-Binaries are built in the source directory; you will need to arrange to
-install them (and a method for starting them) yourself.
-
-``make BLADERF=no`` will disable bladeRF support and remove the dependency on
-libbladeRF.
-
-``make RTLSDR=no`` will disable rtl-sdr support and remove the dependency on 
-librtlsdr.
+Visit [http://localhost:8080/](http://localhost:8080/) or attach a 1090 viewer to the desired port (e.g. 30005).
