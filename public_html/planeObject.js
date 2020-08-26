@@ -427,9 +427,30 @@ PlaneObject.prototype.updateIcon = function() {
                         rotateWithView: (baseMarker.noRotate ? false : true)
                 });
 
+                var text = this.icao.toUpperCase();
+                if (this.icaotype) {
+                        text += " " + this.icaotype;
+				}
+                if (this.flight) {
+                        text += "\n" + this.flight;
+				}
+                if (this.altitude) {
+                        text += "\n" + this.altitude;
+				}
+                if (this.speed) {
+                        text += " " + Math.round(this.speed);
+				}
+
+                var markerText = new ol.style.Text({
+                        text: text,
+                        textAlign: 'left',
+                        offsetX: 20
+                });
+
                 this.markerIcon = icon;
                 this.markerStyle = new ol.style.Style({
-                        image: this.markerIcon
+                        image: this.markerIcon,
+                        text: markerText
                 });
                 this.markerStaticIcon = null;
                 this.markerStaticStyle = new ol.style.Style({});
