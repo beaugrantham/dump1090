@@ -1,4 +1,4 @@
 #!/bin/bash
 
 service nginx start
-./dump1090 --net --write-json /run/dump1090 --stats --stats-range $@
+./dump1090 --write-json /run/dump1090 --stats --stats-range $@

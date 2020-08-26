@@ -1,6 +1,6 @@
 # dump1090
 
-This is a fork of [flightaware/dump1090](https://github.com/flightaware/dump1090) with UI tweaks and Docker support. The Docker image includes NGINX for the UI.
+This is a fork of [flightaware/dump1090](https://github.com/flightaware/dump1090) with UI tweaks and Docker support. The Docker image includes NGINX for the web UI.
 
 ## Building
 
@@ -13,7 +13,7 @@ docker build -t dump1090:1.0.0 .
 ```
 docker run \
   -dit \
-  -Pp 8080:8080 \
+  -p 8080:8080 \
   --name dump1090 \
   --device /dev/bus/usb \
   dump1090:1.0.0 \
@@ -24,4 +24,8 @@ docker run \
 
 ## UI
 
-Visit [http://localhost:8080/](http://localhost:8080/) or attach a 1090 viewer to the desired port (e.g. 30005).
+Visit [http://localhost:8080/](http://localhost:8080/).
+
+Optionally use `--interactive`.
+
+Optionally use `--net` and map ports 30001-30005,30104 to use a 1090 viewer.
