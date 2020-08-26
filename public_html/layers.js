@@ -57,7 +57,10 @@ function createBaseLayers() {
                         hel: "Helicopter Charts",
                         enrl: "IFR Enroute Low Charts",
                         enra: "IFR Area Charts",
-                        enrh: "IFR Enroute High Charts"
+                        enrh: "IFR Enroute High Charts",
+                        secgrids: "Sectional Charts with Grid",
+                        tacgrids: "Terminal Area Charts with Grid",
+                        helgrids: "Helicopter Charts with Grid"
                 };
 
                 for (var type in chartbundleTypes) {
