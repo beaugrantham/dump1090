@@ -14,7 +14,20 @@ function createBaseLayers() {
                 name: 'osm',
                 title: 'OpenStreetMap',
                 type: 'base',
+			    opacity: 0.6,
         }));
+
+        if (MapboxAPIKey) {
+                world.push(new ol.layer.Tile({
+                        source: new ol.source.XYZ({
+                                url: 'https://api.mapbox.com/styles/v1/mapbox/dark-v9/tiles/256/{z}/{x}/{y}?access_token=' + MapboxAPIKey
+                        }),
+                        name: 'mapbox',
+                        title: 'Mapbox',
+                        type: 'base',
+                        opacity: 0.6,
+                }));
+        }
 
         if (BingMapsAPIKey) {
                 world.push(new ol.layer.Tile({

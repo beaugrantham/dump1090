@@ -122,6 +122,9 @@ ChartBundleLayers = true;
 //
 BingMapsAPIKey = null;
 
+// Optional Mapbox key
+MapboxAPIKey = null;
+
 // Turn on display of extra Mode S EHS / ADS-B v1/v2 data
 // This is not polished yet (and so is disabled by default),
 // currently it's just a data dump of the new fields with no UX work.
