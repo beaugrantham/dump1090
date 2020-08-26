@@ -96,10 +96,10 @@ OutlineMlatColor = '#4040FF';
 
 SiteCircles = true; // true to show circles (only shown if the center marker is shown)
 // In miles, nautical miles, or km (depending settings value 'DisplayUnits')
-SiteCirclesDistances = new Array(100,150,200);
-DefaultSiteCirclesCount = 3;
-DefaultSiteCirclesBaseDistance = 100;
-DefaultSiteCirclesInterval = 50;
+SiteCirclesDistances = new Array(10,20,30,40,50);
+DefaultSiteCirclesCount = 5;
+DefaultSiteCirclesBaseDistance = 10;
+DefaultSiteCirclesInterval = 10;
 
 // Controls page title, righthand pane when nothing is selected
 PageName = "PiAware SkyAware";
@@ -111,7 +111,7 @@ ShowFlags = true;
 FlagPath = "flags-tiny/";
 
 // Set to true to enable the ChartBundle base layers (US coverage only)
-ChartBundleLayers = false;
+ChartBundleLayers = true;
 
 // Provide a Bing Maps API key here to enable the Bing imagery layer.
 // You can obtain a free key (with usage limits) at
@@ -125,4 +125,4 @@ BingMapsAPIKey = null;
 // Turn on display of extra Mode S EHS / ADS-B v1/v2 data
 // This is not polished yet (and so is disabled by default),
 // currently it's just a data dump of the new fields with no UX work.
-ExtendedData = false;
+ExtendedData = true;
