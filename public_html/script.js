@@ -1626,8 +1626,8 @@ function setColumnVisibility() {
     var infoTable = $("#tableinfo");
 
     showColumn(infoTable, "#registration", !mapIsVisible);
-    showColumn(infoTable, "#aircraft_type", !mapIsVisible);   
     showColumn(infoTable, "#vert_rate", !mapIsVisible);
+    showColumn(infoTable, "#track", !mapIsVisible);
     showColumn(infoTable, "#rssi", !mapIsVisible);
     showColumn(infoTable, "#lat", !mapIsVisible);
     showColumn(infoTable, "#lon", !mapIsVisible);
