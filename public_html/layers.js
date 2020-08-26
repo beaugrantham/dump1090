@@ -14,7 +14,7 @@ function createBaseLayers() {
                 name: 'osm',
                 title: 'OpenStreetMap',
                 type: 'base',
-			    opacity: 0.6,
+                opacity: 0.6,
         }));
 
         if (MapboxAPIKey) {

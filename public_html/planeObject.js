@@ -430,16 +430,16 @@ PlaneObject.prototype.updateIcon = function() {
                 var text = this.icao.toUpperCase();
                 if (this.icaotype) {
                         text += " " + this.icaotype;
-				}
+                }
                 if (this.flight) {
                         text += "\n" + this.flight;
-				}
+                }
                 if (this.altitude) {
                         text += "\n" + this.altitude;
-				}
+                }
                 if (this.speed) {
                         text += " " + Math.round(this.speed);
-				}
+                }
 
                 var markerText = new ol.style.Text({
                         text: text,
