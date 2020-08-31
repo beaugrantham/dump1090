@@ -11,8 +11,8 @@ PlaneCountInTitle = true;
 MessageRateInTitle = false;
 
 // -- Output Settings -------------------------------------
-// The DisplayUnits setting controls whether nautical (ft, NM, knots), 
-// metric (m, km, km/h) or imperial (ft, mi, mph) units are used in the 
+// The DisplayUnits setting controls whether nautical (ft, NM, knots),
+// metric (m, km, km/h) or imperial (ft, mi, mph) units are used in the
 // plane table and in the detailed plane info. Valid values are
 // "nautical", "metric", or "imperial".
 DisplayUnits = "nautical";
@@ -96,13 +96,13 @@ OutlineMlatColor = '#4040FF';
 
 SiteCircles = true; // true to show circles (only shown if the center marker is shown)
 // In miles, nautical miles, or km (depending settings value 'DisplayUnits')
-SiteCirclesDistances = new Array(10,20,30,40,50);
+SiteCirclesDistances = new Array(20,40,60,80,100);
 DefaultSiteCirclesCount = 5;
-DefaultSiteCirclesBaseDistance = 10;
-DefaultSiteCirclesInterval = 10;
+DefaultSiteCirclesBaseDistance = 20;
+DefaultSiteCirclesInterval = 20;
 
 // Controls page title, righthand pane when nothing is selected
-PageName = "PiAware SkyAware";
+PageName = "SkyAware";
 
 // Show country flags by ICAO addresses?
 ShowFlags = true;
