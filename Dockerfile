@@ -4,6 +4,7 @@ WORKDIR /opt/dump1090
 
 RUN apt-get update
 RUN apt-get upgrade -y
+RUN apt-get install -y procps
 
 # Install NGINX
 RUN apt-get install -y nginx
