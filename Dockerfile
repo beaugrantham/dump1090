@@ -31,4 +31,4 @@ RUN make dump1090
 
 EXPOSE 8080 30001 30002 30003 30004 30005 30104
 
-ENTRYPOINT [ "./docker-start.sh" ]
+ENTRYPOINT [ "./entrypoint.sh" ]
