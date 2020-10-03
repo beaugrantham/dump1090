@@ -5,7 +5,7 @@ This is a fork of [flightaware/dump1090](https://github.com/flightaware/dump1090
 ## Building
 
 ```
-docker build -t dump1090:1.0.0 .
+docker build -t beaugrantham/dump1090:4.0.0 .
 ```
 
 ## Running
@@ -16,7 +16,7 @@ docker run \
   -p 8080:8080 \
   --name dump1090 \
   --device /dev/bus/usb \
-  dump1090:1.0.0 \
+  beaugrantham/dump1090:1.0.0 \
   --lat 0.0 \
   --lon 0.0 \
   --quiet

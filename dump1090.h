@@ -52,36 +52,33 @@
 
 // Default version number, if not overriden by the Makefile
 #ifndef MODES_DUMP1090_VERSION
-# define MODES_DUMP1090_VERSION     "v1.13-custom"
+# define MODES_DUMP1090_VERSION     "unknown"
 #endif
 
 #ifndef MODES_DUMP1090_VARIANT
-# define MODES_DUMP1090_VARIANT     "dump1090-mutability"
+# define MODES_DUMP1090_VARIANT     "dump1090-unknown"
 #endif
 
 // ============================= Include files ==========================
 
-#ifndef _WIN32
-    #include <stdio.h>
-    #include <string.h>
-    #include <stdlib.h>
-    #include <stdbool.h>
-    #include <pthread.h>
-    #include <stdint.h>
-    #include <errno.h>
-    #include <unistd.h>
-    #include <math.h>
-    #include <sys/time.h>
-    #include <signal.h>
-    #include <fcntl.h>
-    #include <ctype.h>
-    #include <sys/stat.h>
-    #include <sys/ioctl.h>
-    #include <time.h>
-    #include <limits.h>
-#else
-    #include "winstubs.h" //Put everything Windows specific in here
-#endif
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdatomic.h>
+#include <pthread.h>
+#include <stdint.h>
+#include <errno.h>
+#include <unistd.h>
+#include <math.h>
+#include <sys/time.h>
+#include <signal.h>
+#include <fcntl.h>
+#include <ctype.h>
+#include <sys/stat.h>
+#include <sys/ioctl.h>
+#include <time.h>
+#include <limits.h>
 
 #include "compat/compat.h"
 
@@ -235,18 +232,6 @@ typedef enum {
 
 #define MODES_NON_ICAO_ADDRESS       (1<<24) // Set on addresses to indicate they are not ICAO addresses
 
-#define MODES_DEBUG_DEMOD (1<<0)
-#define MODES_DEBUG_DEMODERR (1<<1)
-#define MODES_DEBUG_BADCRC (1<<2)
-#define MODES_DEBUG_GOODCRC (1<<3)
-#define MODES_DEBUG_NOPREAMBLE (1<<4)
-#define MODES_DEBUG_NET (1<<5)
-#define MODES_DEBUG_JS (1<<6)
-
-// When debug is set to MODES_DEBUG_NOPREAMBLE, the first sample must be
-// at least greater than a given level for us to dump the signal.
-#define MODES_DEBUG_NOPREAMBLE_LEVEL 25
-
 #define MODES_INTERACTIVE_REFRESH_TIME 250      // Milliseconds
 #define MODES_INTERACTIVE_DISPLAY_TTL 60000     // Delete from display after 60 seconds
 
@@ -276,41 +261,27 @@ typedef enum {
 #include "icao_filter.h"
 #include "convert.h"
 #include "sdr.h"
+#include "fifo.h"
 
 //======================== structure declarations =========================
 
 typedef enum {
-    SDR_NONE, SDR_IFILE, SDR_RTLSDR, SDR_BLADERF
+    SDR_NONE, SDR_IFILE, SDR_RTLSDR, SDR_BLADERF, SDR_HACKRF, SDR_LIMESDR
 } sdr_type_t;
 
-// Structure representing one magnitude buffer
-struct mag_buf {
-    uint16_t       *data;            // Magnitude data. Starts with Modes.trailing_samples worth of overlap from the previous block
-    unsigned        length;          // Number of valid samples _after_ overlap. Total buffer length is buf->length + Modes.trailing_samples.
-    uint64_t        sampleTimestamp; // Clock timestamp of the start of this block, 12MHz clock
-    uint64_t        sysTimestamp;    // Estimated system time at start of block
-    uint32_t        dropped;         // Number of dropped samples preceding this buffer
-    double          mean_level;      // Mean of normalized (0..1) signal level
-    double          mean_power;      // Mean of normalized (0..1) power level
-};
-
 // Program global state
-struct {                             // Internal state
+struct _Modes {                             // Internal state
     pthread_t       reader_thread;
 
-    pthread_mutex_t data_mutex;      // Mutex to synchronize buffer access
-    pthread_cond_t  data_cond;       // Conditional variable associated
-
-    struct mag_buf  mag_buffers[MODES_MAG_BUFFERS];       // Converted magnitude buffers from RTL or file input
-    unsigned        first_free_buffer;                    // Entry in mag_buffers that will next be filled with input.
-    unsigned        first_filled_buffer;                  // Entry in mag_buffers that has valid data and will be demodulated next. If equal to next_free_buffer, there is no unprocessed data.
-    struct timespec reader_cpu_accumulator;               // CPU time used by the reader thread, copied out and reset by the main thread under the mutex
+    pthread_mutex_t reader_cpu_mutex;                     // mutex protecting reader_cpu_accumulator
+    struct timespec reader_cpu_accumulator;               // accumulated CPU time used by the reader thread
+    struct timespec reader_cpu_start;                     // start time for the last reader thread CPU measurement
 
     unsigned        trailing_samples;                     // extra trailing samples in magnitude buffers
     double          sample_rate;                          // actual sample rate in use (in hz)
 
     uint16_t       *log10lut;        // Magnitude -> log10 lookup table
-    int             exit;            // Exit from the main loop when true (2 = unclean exit)
+    atomic_int      exit;            // Exit from the main loop when true (2 = unclean exit)
 
     // Sample conversion
     int            dc_filter;        // should we apply a DC filter?
@@ -332,6 +303,7 @@ struct {                             // Internal state
     struct net_writer beast_verbatim_out;        // Beast-format output, verbatim mode
     struct net_writer beast_cooked_out;          // Beast-format output, "cooked" mode
     struct net_writer sbs_out;                   // SBS-format output
+    struct net_writer stratux_out;               // Stratux-format output
     struct net_writer fatsv_out;                 // FATSV-format output
 
 #ifdef _WIN32
@@ -345,7 +317,6 @@ struct {                             // Internal state
     int   raw;                       // Raw output format
     int   mode_ac;                   // Enable decoding of SSR Modes A & C
     int   mode_ac_auto;              // allow toggling of A/C by Beast commands
-    int   debug;                     // Debugging mode
     int   net;                       // Enable networking
     int   net_only;                  // Enable just networking
     uint64_t net_heartbeat_interval; // TCP heartbeat interval (milliseconds)
@@ -354,6 +325,7 @@ struct {                             // Internal state
     char *net_output_raw_ports;      // List of raw output TCP ports
     char *net_input_raw_ports;       // List of raw input TCP ports
     char *net_output_sbs_ports;      // List of SBS output TCP ports
+    char *net_output_stratux_ports;  // List of Stratux output TCP ports
     char *net_input_beast_ports;     // List of Beast input TCP ports
     char *net_output_beast_ports;    // List of Beast output TCP ports
     char *net_bind_address;          // Bind address
@@ -397,7 +369,9 @@ struct {                             // Internal state
     int stats_latest_1min;
     struct stats stats_5min;
     struct stats stats_15min;
-} Modes;
+};
+
+extern struct _Modes Modes;
 
 // The struct we use to store information about a decoded message.
 struct modesMessage {

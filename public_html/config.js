@@ -96,7 +96,6 @@ OutlineMlatColor = '#4040FF';
 
 SiteCircles = true; // true to show circles (only shown if the center marker is shown)
 // In miles, nautical miles, or km (depending settings value 'DisplayUnits')
-SiteCirclesDistances = new Array(20,40,60,80,100);
 DefaultSiteCirclesCount = 5;
 DefaultSiteCirclesBaseDistance = 20;
 DefaultSiteCirclesInterval = 20;
@@ -122,7 +121,6 @@ ChartBundleLayers = true;
 //
 BingMapsAPIKey = null;
 
-// Optional Mapbox key
 MapboxAPIKey = null;
 
 // Turn on display of extra Mode S EHS / ADS-B v1/v2 data
