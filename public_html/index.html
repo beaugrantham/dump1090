@@ -23,7 +23,7 @@
 		<script type="text/javascript" src="flags.js?v=4.0"></script>
 		<script type="text/javascript" src="layers.js?v=4.0"></script>
 		<script type="text/javascript" src="script.js?v=4.0"></script>
-		<title>PiAware SkyAware</title>
+		<title>SkyAware</title>
 	</head>
 
 	<body onload="initialize()">
@@ -49,7 +49,7 @@
 		<div id="header" class="infoHeading">
 			<div class="logoContainer">
 				<a href="http://flightaware.com/" target="_blank"><img src="images/fa_logo_color.png" alt="FlightAware" class="flightawareLogo" srcset="images/fa_logo_color.png 1x, images/fa_logo_color@2x.png 2x, images/fa_logo_color@3x.png 3x"></a>
-				<img src="images/pa-sa-logo.png" alt="PiAware SkyAware" class="adsbLogo piAwareLogo" srcset="images/pa-sa-logo.png 1x, images/pa-sa-logo@2x.png 2x, images/pa-sa-logo@3x.png 3x">
+				<img src="images/pa-sa-logo.png" alt="SkyAware" class="adsbLogo piAwareLogo" srcset="images/pa-sa-logo.png 1x, images/pa-sa-logo@2x.png 2x, images/pa-sa-logo@3x.png 3x">
 				<img src="images/ff-sa-logo.png" alt="FlightFeeder SkyAware" class="adsbLogo flightfeederLogo" srcset="images/ff-sa-logo.png 1x, images/ff-sa-logo@2x.png 2x, images/ff-sa-logo@3x.png 3x" style="display: none;">
 			</div>
 			<div class="buttonContainer">
@@ -58,12 +58,11 @@
 				<div class="button buttonHeader" onclick="selectAllPlanes();"><span class="buttonText">Show All Tracks</span></div>
 				<div class="button buttonHeader" onclick="deselectAllPlanes();"><span class="buttonText">Hide All Tracks</span></div>
 			</div>
-			<div class="settingsContainer"><img src="images/settings-icon.png" id="settingsCog" srcset="images/settings-icon.png 1x, images/settings-icon@2x.png 2x, images/settings-icon@3x.png 3x"></div>
 		</div>
 
 		<div id="layout_container">
-			
-			
+
+
 
 			<div id="highlighted_infoblock">
 				<div class="highlightedTitle">
@@ -187,9 +186,17 @@
 			<div id="sidebar_container">
 				<div id="splitter" class="ui-resizable-handle ui-resizable-w"></div>
 					<div id="sidebar_canvas">
-							
-							
+
+
 					<div id="sidebar-table">
+							<div>
+								<div class="buttonContainer">
+									<div class="button buttonHeader" onclick="resetMap();"><span class="buttonText">Reset Map</span></div>
+									<div class="button buttonHeader" onclick="selectAllPlanes();"><span class="buttonText">Show All Tracks</span></div>
+									<div class="button buttonHeader" onclick="deselectAllPlanes();"><span class="buttonText">Hide All Tracks</span></div>
+								</div>
+								<div class="settingsContainer"><img src="images/settings-icon.png" id="settingsCog" srcset="images/settings-icon.png 1x, images/settings-icon@2x.png 2x, images/settings-icon@3x.png 3x"></div>
+							</div>
 							<div id="dump1090_infoblock">
 									<table style="width: 100%">
 										<tr class="infoblock_heading">
@@ -200,19 +207,19 @@
 												<a href="https://github.com/flightaware/dump1090" id="dump1090_version" target="_blank"></a>
 											</td>
 										</tr>
-			
+
 										<tr class="infoblock_body">
 											<td><span class="infoBlockTitleText">Total Aircraft:</span> <span id="dump1090_total_ac">n/a</span></td>
 											<td><span class="infoBlockTitleText">Messages:</span> <span id="dump1090_message_rate">n/a</span>/sec</td>
 										</tr>
-			
+
 										<tr class="infoblock_body">
 											<td><span class="infoBlockTitleText">With Positions:</span> <span id="dump1090_total_ac_positions">n/a</span></td>
 											<td><span class="infoBlockTitleText">History:</span> <span id="dump1090_total_history">n/a</span> positions</td>
 										</tr>
 									</table>
 								</div> <!-- dump1090_infoblock -->
-			
+
 								<form id="altitude_filter_form">
 									<label><span class="infoBlockTitleText">Filter by Altitude:</span></label>
 									<input id="altitude_filter_min" name="minAltitude" type="text" class="altitudeFilterInput" maxlength="5">
@@ -223,10 +230,6 @@
 									<button type="submit">Filter</button>
 									<button id="altitude_filter_reset_button">Reset</button>
 								</form>
-			
-								<div>
-									<button id="column_select">Select Columns</button>
-								</div>
 
 								<div id="column_select_window" class="hidden">
 									<div id="column_select_close_box"></div>
@@ -382,16 +385,19 @@
 											<div class="legendTitle">TIS-B</div>
 										</div>
 									</div>
+									<div>
+										<button id="column_select">Select Columns</button>
+									</div>
 								</div> <!-- planes_table_container -->
 					</div>
 
 
-					
-				</div> <!-- sidebar_canvas -->	
-				
+
+				</div> <!-- sidebar_canvas -->
+
 
 					<div id="selected_infoblock" class="hidden">
-							
+
 							<div id="splitter-infoblock" class="ui-resizable-handle ui-resizable-n"></div>
 							<div id="close-button">Close</div>
 							<div class="infoblock-container">
@@ -400,7 +406,7 @@
 								<span class="identLarge" title="Typically the air traffic control callsign or the aircraft's registration, as entered into the transponder by the pilot."><span id="selected_callsign">n/a</span></span>
 								<span class="identSmall" title="The aircraft's unique ICAO identification number shown in hexadecimal format."><span id="selected_icao">n/a</span></span>
 							</div>
-						
+
 								<div class="infoBlockTopSection">
 									<span id="selected_flightaware_link" class=""></span>
 									<div class="infoRow removePadding">
@@ -747,7 +753,7 @@
 											<span id="selected_rc">n/a</span>
 										</div>
 									</div>
-								
+
 
 							</div>
 
@@ -757,18 +763,18 @@
 
 							<div class="bottom-container">
 								<div class="selected_airframe">
-									<a href="http://www.airframes.org/" onclick="document.getElementById('horrible_hack').submit.call(document.getElementById('airframes_post')); return false;">	
-										airframes.org	
+									<a href="http://www.airframes.org/" onclick="document.getElementById('horrible_hack').submit.call(document.getElementById('airframes_post')); return false;">
+										airframes.org
 									</a>
 								</div>
 							</div>
-							
+
 							</div>
 						</div> <!-- selected_infoblock -->
 
-					
 
-				
+
+
 			</div> <!-- sidebar_container -->
 		</div> <!-- layout_container -->
 
